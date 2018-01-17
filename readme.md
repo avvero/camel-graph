@@ -23,6 +23,5 @@ Camel-graph is the viewer for camel routes through jolokia
 ```
 ## Launch
 ```
-go build humpway.go
-./humpway -httpPort=8080
+./camel-graph -httpPort=8080
 ```

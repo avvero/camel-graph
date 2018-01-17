@@ -1,0 +1,18 @@
+{
+  "environments": [
+    {
+      "name": "dev",
+      "services": [
+        {
+          "name": "servicemix",
+          "url": "http://servicemix:8181",
+          "color": "#62aa34",
+          "authorization": {
+            "login": "smx",
+            "pass": "smx"
+          }
+        }
+      ]
+    }
+  ]
+}

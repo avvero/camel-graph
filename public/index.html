@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="flow" ng-controller="mainController">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+    <title>Camel-graph</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/skin-blue.min.css">
+    <link rel="stylesheet" href="css/flow.css?version=4">
+    <link rel="stylesheet" href="css/vis.min.css">
+    <script>
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+        String.prototype.endsWith = function(suffix) {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
+        String.prototype.startsWith = function(prefix) {
+            return this.indexOf(prefix) === 0;
+        };
+        String.prototype.contains = function(prefix) {
+            return this.indexOf(prefix) >= 0;
+        };
+    </script>
+    <script src="js/vendor/vis.min.js"></script>
+    <script src="js/vendor/xml2json.min.js"></script>
+
+    <script src="js/vendor/jquery-1.11.1.min.js"></script>
+
+    <script src="js/vendor/angular.js"></script>
+    <script src="js/vendor/angular-sanitize.js"></script>
+    <script src="js/vendor/angular-route.js"></script>
+    <script src="js/vendor/angular-ui-router.js"></script>
+    <script src="js/vendor/angular-relative-date.min.js"></script>
+
+    <script src="js/vendor/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="js/vendor/moment.min.js"></script>
+
+    <script src="js/app.js?version=1"></script>
+    <script src="js/controllers/environments.js?version=1"></script>
+    <script src="js/controllers/environment.js?version=1"></script>
+    <script src="js/providers/local-timeout.js"></script>
+    <script src="js/controllers/optionsDialog.js"></script>
+    <script src="js/services/utils.js"></script>
+</head>
+<body>
+    <div ui-view="single" class="full_height" autoscroll="false"></div>
+</body>
+</html>

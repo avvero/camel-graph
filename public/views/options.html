@@ -1,0 +1,24 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" ng-if="data.nodes.length == 0">Route description</h4>
+        <h4 class="modal-title" ng-if="data.nodes.length != 0">Endpoint description</h4>
+    </div>
+    <div class="modal-body scrollable">
+        <div ng-if="data.nodes.length == 0">
+            Connection is defined in route:
+            <div class="lead" ng-repeat="edge in data.edges">
+                <code class="tag">{{edge.route.name}}</code>
+                <pre>{{edge.route.schema}}</pre>
+            </div>
+        </div>
+        <div ng-if="data.nodes.length != 0">
+            <b>{{data.nodes[0].label}}</b> is mentioned in routes:
+            <div class="lead" ng-repeat="edge in data.edges">
+                <code class="tag">{{edge.route.name}}</code>
+                <pre>{{edge.route.schema}}</pre>
+            </div>
+        </div>    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="ok()">Close</button>
+    </div>
+</div>

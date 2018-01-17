@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<body>
+<div class="babies_container">
+    <div class="page-header">
+        <div class="camel-logo"><img src="img/camel-graph.png" style="max-height: 236px"></div>
+        <h1>Camel-graph
+            <small>shows camel routes as a graph</small>
+        </h1>
+    </div>
+    <div ng-if="data.environments.length > 0" class="places">
+        <p class="lead">Choose environment:</p>
+        <p class="lead" ng-repeat="environment in data.environments">
+            <a ng-href="#listen/{{environment.name}}">#{{environment.name}}</a>
+        </p>
+
+    </div>
+    <div ng-if="!data.environments || data.environments.length == 0">
+        <p class="lead">
+            No environments :(
+        </p>
+    </div>
+</div>
+</body>

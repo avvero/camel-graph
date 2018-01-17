@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<body>
+<div class="babies_container full_width full_height">
+    <div class="page-header camel-map-page-header">
+        <div class="camel-logo"><img src="img/camel-graph.png"></div>
+        <h1>Camel-graph
+            <code class="place pointer" ng-click="goToPlaces()">#{{$stateParams.component}}</code>
+        </h1>
+        <span class="connection_error" ng-if="connection.error">{{connection.error}}</span>
+    </div>
+    <div class="camel-graph-form full_height">
+        <div class="list-group nav nav-tabs" style="width: 44px; position: absolute">
+            <a href="" class="list-group-item {{selectedTab == 'graph' ? 'active' : ''}}" ng-click="setTab('graph')" title="Graph">
+                <span class="fa fa-asterisk"></span>
+            </a>
+            <a href="" class="list-group-item {{showSearchBox ? 'active' : ''}}" ng-click="showHideSearchBox()" title="Show search block">
+                <span class="fa fa-search"></span>
+            </a>
+            <a href="" class="list-group-item {{selectedTab == 'data' ? 'active' : ''}}" ng-click="setTab('data')" title="Data">
+                <span class="fa fa-table"></span>
+            </a>
+        </div>
+        <div class="row full_height camel-graph-tab {{selectedTab == 'graph' ? 'visible' : ''}}">
+            <div class="col-md-3 full_height no-padding" ng-if="showSearchBox">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search endpoint"
+                           ng-model="endpointSearchValue">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-flat" ng-click="endpointSearchValue = ''">
+                            <span class="fa fa-remove"></span>
+                        </button>
+                    </span>
+                </div>
+                <div class="endpoint-list">
+                    <ul>
+                        <li class="endpoint-list-entry {{key == selectedGraphEndpoint ? 'selected' : ''}}"
+                            ng-click="selectGraphEndpoint(null)">...
+                        </li>
+                        <li class="endpoint-list-entry {{key == selectedGraphEndpoint ? 'selected' : ''}}"
+                            ng-repeat="key in graph.endpointsKeys | filter:endpointSearchValue | orderBy" ng-click="selectGraphEndpoint(key)">
+                            {{key}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="{{showSearchBox ? 'col-md-9' : 'col-md-12'}} full_height no-padding">
+                <div class="humpway-graph-legend">
+                    <ul>
+                        <li>Circle stands for endpoint</li>
+                        <li>Arrow stands for route</li>
+                        <li>Services:</li>
+                        <li ng-repeat="service in data.services" class="service {{service.finalUpdatingState}}" title="Updating state: {{service.finalUpdatingState}} {{service.error ? '(' + service.error + ')' : ''}}">
+                            <div class="circle" ng-style='{"background-color": service.color}'>
+                                <div class="service-name">{{service.name}}</div>
+                            </div>
+                        </li>
+                        <li>---</li>
+                        <li>Nodes: {{graph.nodesDataSet.length}}</li>
+                        <li>Edges: {{graph.edgesDataSet.length}}</li>
+                    </ul>
+                </div>
+                <div id="camel-map"></div>
+            </div>
+        </div>
+        <div class="row full_height camel-graph-tab camel-graph-tab-data {{selectedTab == 'data' ? 'visible' : ''}}">
+            <div ng-if="data.services.length > 0" class="babies">
+                <div class="lead" ng-repeat="service in data.services" id="component_{{component.url}}">
+                    <code>{{service.name}}</code>
+                    <div class="lead" ng-repeat="route in service.routes">
+                        <code class="tag">{{route.name}}</code>
+                        <!--<div ng-repeat="input in route.endpoints.inputs track by $index">{{input}}</div>-->
+                        <!--<div style="color: #00a7d0" ng-repeat="input in route._endpoints.inputs track by $index">{{input}}</div>-->
+                        <pre>{{route.schema}}</pre>
+                        <!--<pre>{{route.schemaJson | json}}</pre>-->
+                        <!--<pre>{{route.schemaJsonEndpoints | json}}</pre>-->
+                        <!--<div ng-repeat="output in route.endpoints.outputs track by $index">{{output}}</div>-->
+                        <!--<div style="color: #00a7d0" ng-repeat="output in route._endpoints.outputs track by $index">{{output}}</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="github_link"><a href="https://github.com/avvero/camel-graph">github</a></div>
+</body>

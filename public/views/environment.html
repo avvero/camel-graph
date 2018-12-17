@@ -49,7 +49,7 @@
                         <li>Circle stands for endpoint</li>
                         <li>Arrow stands for route</li>
                         <li>Services:</li>
-                        <li ng-repeat="service in data.services" class="service {{service.finalUpdatingState}}" title="Updating state: {{service.finalUpdatingState}} {{service.error ? '(' + service.error + ')' : ''}}">
+                        <li ng-repeat="service in data.services" class="service {{service.updatingState}}" title="Updating state: {{service.updatingState}} {{service.error ? '(' + service.error + ')' : ''}}">
                             <div class="circle" ng-style='{"background-color": service.color}'>
                                 <div class="service-name">{{service.name}}</div>
                             </div>

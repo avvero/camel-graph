@@ -5,11 +5,12 @@ Camel-graph is the viewer for camel routes through jolokia
 {
   "environments": [
     {
-      "name": "test",
+      "name": "dev",
       "services": [
         {
-          "name": "test",
-          "url": "http://",
+          "name": "smx",
+          "url": "http://localhost:8181",
+          "color": "#62aa34",
           "authorization": {
             "login": "smx",
             "pass": "smx"
@@ -23,5 +24,6 @@ Camel-graph is the viewer for camel routes through jolokia
 ```
 ## Launch
 ```
+go build
 ./camel-graph -httpPort=8080
 ```

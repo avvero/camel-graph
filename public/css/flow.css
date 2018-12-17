@@ -818,6 +818,24 @@ html, body {
     color: #b4b4b4 !important;
 }
 
+.humpway-graph-legend ul li.service.in_process .circle{
+    -webkit-animation: blinking 1s infinite;  /* Safari 4+ */
+    -moz-animation: blinking 1s infinite;  /* Fx 5+ */
+    -o-animation: blinking 1s infinite;  /* Opera 12+ */
+    animation: blinking 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes blinking {
+    0%, 49% {
+        /*background-color: rgb(117, 209, 63);*/
+        /*border: 3px solid #e50000;*/
+    }
+    50%, 100% {
+        background-color: #acacac;
+        /*border: 3px solid rgb(117, 209, 63);*/
+    }
+}
+
 .service-name {
     display: inline-block;
     padding-top: 0px;

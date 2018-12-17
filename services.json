@@ -4,13 +4,18 @@
       "name": "dev",
       "services": [
         {
-          "name": "servicemix",
-          "url": "http://servicemix:8181",
+          "name": "smx",
+          "url": "http://localhost:8181",
           "color": "#62aa34",
           "authorization": {
             "login": "smx",
             "pass": "smx"
           }
+        },
+        {
+          "name": "spring_service",
+          "url": "http://localhost:10002",
+          "color": "#272dc5"
         }
       ]
     }

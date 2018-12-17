@@ -7,12 +7,7 @@ import (
 	"fmt"
 	"log"
 	"flag"
-)
-
-const (
-	GetRouteSchemaPath    = "%s/jolokia/exec/org.apache.camel:context=%s,type=routes,name=\"%s\"/dumpRouteAsXml(boolean)/true"
-	GetRouteEndpointsPath = "%s/jolokia/exec/org.apache.camel:context=%s,type=routes,name=\"%s\"/createRouteStaticEndpointJson(boolean)/true"
-	GetRoutesPath         = "/jolokia/read/org.apache.camel:type=routes,*"
+	"git.fxclub.org/belyaev-ay/camel-graph/model"
 )
 
 var (
@@ -26,20 +21,22 @@ var (
 func main() {
 	flag.Parse()
 
-	config, err := ReadConfig("services.json")
+	config, err := model.ReadConfig("services.json")
+	config.ServiceUpdateIntervalSeconds = *serviceUpdateIntervalSeconds
+	config.RouteUpdateIntervalSeconds = *routeUpdateIntervalSeconds
 	if err != nil {
 		panic(fmt.Sprintf("Error during configuration %v", err))
 	}
 
-	var metricConsumer MetricConsumer
+	var metricConsumer model.MetricConsumer
 	if *graphiteUrl != "" {
-		metricConsumer = NewGraphite(*graphiteUrl, *graphiteRepeatSendOnFail)
+		metricConsumer = model.NewGraphite(*graphiteUrl, *graphiteRepeatSendOnFail)
 		log.Println("Metrics will be passed to graphite: " + *graphiteUrl)
 	} else {
-		metricConsumer = &MetricConsumerStub{}
+		metricConsumer = &model.MetricConsumerStub{}
 	}
 
-	instance, err := NewInstance(config, &metricConsumer)
+	instance, err := model.NewInstance(config, &metricConsumer)
 	if err != nil {
 		panic(fmt.Sprintf("Error during configuration %v", err))
 	}
@@ -50,7 +47,7 @@ func main() {
 		var js []byte
 		var err error
 		envName := r.URL.Query().Get("env")
-		var environmentToReturn *Environment
+		var environmentToReturn *model.Environment
 		if envName != "" {
 			for _, environment := range instance.Environments {
 				if environment.Name == envName {

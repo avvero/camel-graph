@@ -8,6 +8,8 @@ function placeController($scope, data, $timeout, $http, $stateParams, $location,
         $scope.isDestroed = true
     });
 
+    $scope.dataUpdateIntervalSeconds = 60
+
     $scope.merge = function (oldData, newData) {
         var result = {}
         result.name = newData.name
@@ -73,10 +75,10 @@ function placeController($scope, data, $timeout, $http, $stateParams, $location,
                     $scope.connection.error = "Connection with server is lost"
                 });
             if (!!$scope.isDestroed) return
-            $scope.listen(10000)
+            $scope.listen($scope.dataUpdateIntervalSeconds * 1000)
         }, delay, true);
     }
-    $scope.listen(5000)
+    $scope.listen($scope.dataUpdateIntervalSeconds * 1000)
 
     $scope.drawGraph = function (nodes, edges) {
         console.info("Start draw")
@@ -86,12 +88,15 @@ function placeController($scope, data, $timeout, $http, $stateParams, $location,
         };
         var options = {
             nodes: {
+                // shadow: true,
                 shape: 'dot',
-                size: 10,
-                shadow: true
+                size: 12,
+                font: {
+                    size: 20
+                }
             },
             edges: {
-                shadow: true,
+                // shadow: true,
                 smooth: true,
                 arrows: {to: true},
                 scaling: {
@@ -99,9 +104,10 @@ function placeController($scope, data, $timeout, $http, $stateParams, $location,
                         return value/total;
                     },
                     min:1,
-                    max:30
+                    max: 10
                 },
-                arrowStrikethrough: false
+                arrowStrikethrough: false,
+                font: {size: 8, color: 'grey', face: 'arial'}
             }
         };
         var container = document.getElementById('camel-map');

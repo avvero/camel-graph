@@ -1,5 +1,4 @@
 angular.module('flow').service('utils', function () {
-    var x2js = new X2JS();
     var getRandomColor = function () {
         var letters = '0123456789ABCDEF';
         var color = '#';
@@ -9,119 +8,8 @@ angular.module('flow').service('utils', function () {
         return color;
     }
     return {
-        toJson: function (text) {
-            try {
-                return JSON.parse(text)
-            } catch (e) {
-                return text
-            }
-        },
         getRandomColor: getRandomColor,
-        find: function (list, url) {
-            for (var i = 0; i < list.length; i++) {
-                if (list[i].url == url) {
-                    return list[i]
-                    break
-                }
-            }
-            return null
-        },
-        iterate: function (obj, stack, result) {
-            for (var property in obj) {
-                if (obj.hasOwnProperty(property)) {
-                    if (typeof obj[property] == "object") {
-                        this.iterate(obj[property], stack + '.' + property, result);
-                    } else {
-                        result[stack + '.' + property] = obj[property]
-                    }
-                }
-            }
-        },
-        processEndpointName: function (value) {
-            value = value.replace("bean://", "bean:")
-            value = value.replace("direct-vm://", "direct-vm:")
-            value = value.replace("direct://", "direct:")
-            value = value.replace("activemq:", "jms:")
-            value = value.replace("jms://", "jms:")
-            value = value.replace("topic://", "topic:")
-            value = value.replace("rest://", "rest:")
-            value = value.replace("timer://", "timer:")
-            value = value.replace("seda://", "seda:")
-
-            if (value.contains("VirtualTopic.")) {
-                var parts = value.split("VirtualTopic.")
-                if (parts.length == 2) {
-                    value = "VirtualTopic." + parts[1]
-                }
-            }
-            value = value.split("?")[0]
-            return value
-        },
-        mapEndpoint: function (value) {
-
-        },
-        xmlToJson: function (value) {
-            return x2js.xml_str2json(value)
-        }
-        ,
         processSchema: function (data) {
-            // find endpoints
-            for (var i = 0; i < data.services.length; i++) {
-                var service = data.services[i]
-                for (var j = 0; j < service.routes.length; j++) {
-                    if (service.routes[j].schema) {
-                        service.routes[j]._endpoints = service.routes[j].endpoints //backup
-
-                        service.routes[j].schemaJson = this.xmlToJson(service.routes[j].schema)
-                        var schemaEndpointsOutputs = []
-                        service.routes[j].endpoints.outputs = schemaEndpointsOutputs
-
-                        //find endpoints from schema
-                        var endpoints = {}
-                        this.iterate(service.routes[j].schemaJson, '', endpoints)
-                        service.routes[j].schemaJsonEndpoints = endpoints
-                        for (var key in endpoints) {
-                            if (key.endsWith('from._uri')) {
-                                // skip
-                            } else if (key.endsWith('._uri')) {
-                                schemaEndpointsOutputs.push(endpoints[key])
-                            }
-                        }
-                    } else {
-                        // no xml
-                        var endpoints = service.routes[j].endpoints
-                        if (endpoints) {
-                            // if (endpoints.inputs) {
-                            //     for (var n = 0; n < endpoints.inputs.length; n++) {
-                            //         endpoints.inputs[n] = this.mapEndpoint(endpoints.inputs[n])
-                            //     }
-                            // }
-                            if (endpoints.outputs) {
-                                for (var n = 0; n < endpoints.outputs.length; n++) {
-                                    endpoints.outputs[n] = endpoints.outputs[n]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            // Process endpoints names
-            for (var i = 0; i < data.services.length; i++) {
-                var service = data.services[i]
-                for (var j = 0; j < service.routes.length; j++) {
-                    var route = service.routes[j]
-                    if (route.endpoints && route.endpoints.inputs) {
-                        for (var n = 0; n < route.endpoints.inputs.length; n++) {
-                            route.endpoints.inputs[n] = this.processEndpointName(route.endpoints.inputs[n])
-                        }
-                    }
-                    if (route.endpoints && route.endpoints.outputs) {
-                        for (var n = 0; n < route.endpoints.outputs.length; n++) {
-                            route.endpoints.outputs[n] = this.processEndpointName(route.endpoints.outputs[n])
-                        }
-                    }
-                }
-            }
             // Set color
             for (var i = 0; i < data.services.length; i++) {
                 var service = data.services[i]
@@ -166,6 +54,10 @@ angular.module('flow').service('utils', function () {
                 },
                 getRouteTitle: function (route) {
                     var title = '<b>' + route.name + '</b>'
+                        + '<br/>State: ' + (route.state || 'none')
+                        + '<br/>Uptime: ' + (route.uptime || '-')
+                        + '<br/>LastUpdated: ' + (route.lastUpdated ? moment(route.lastUpdated).fromNow(): "-")
+                        + '<br/> ----'
                         + '<br/>exchangesTotal: ' + (route.exchangesTotal || 0)
                         + '<br/>exchangesCompleted: ' + (route.exchangesCompleted || 0)
                         + '<br/>exchangesFailed: ' + (route.exchangesFailed || 0)
@@ -183,15 +75,18 @@ angular.module('flow').service('utils', function () {
                 addEdge: function (route, from, to, service) {
                     var id = from + "_" + to
                     // console.info(service.name + ": add edge " + id + ": " + route.name)
+                    var routeRepresentation = this.getRouteRepresentation(route, service)
                     this.edgesDataSet.add({
                         id: id,
                         from: from,
                         to: to,
                         route: route,
-                        color: service.color,
+                        color: routeRepresentation.color,
                         title: this.getRouteTitle(route),
-                        value: route.exchangesTotal,
-                        dashes: false
+                        value: routeRepresentation.weight,
+                        dashes: routeRepresentation.dashes,
+                        label: route.exchangesTotal ? '' + route.exchangesTotal : null,
+                        font: {align: 'top'}
                     })
                     this.edgeMap[id] = 1
                 },
@@ -204,15 +99,20 @@ angular.module('flow').service('utils', function () {
                             id: to,
                             strike: false
                         })
-                        if (this.isStrikes(existedEdge, route)) {
+                        if (this.isNeedUpdate(existedEdge, route)) {
                             // console.info(route.name + " " + existedEdge.route.exchangesTotal + ' -> ' + route.exchangesTotal)
+                            var routeRepresentation = this.getRouteRepresentation(route, service)
                             this.edgesDataSet.update([{
                                 id: id,
                                 from: from,
                                 to: to,
                                 route: route,
+                                color: routeRepresentation.color,
                                 title: this.getRouteTitle(route),
-                                value: route.exchangesTotal
+                                value: routeRepresentation.weight,
+                                dashes: routeRepresentation.dashes,
+                                label: route.exchangesTotal ? '' + route.exchangesTotal : null,
+                                font: {align: 'top'}
                             }]);
                             this.nodesDataSet.update({
                                 id: to,
@@ -221,11 +121,32 @@ angular.module('flow').service('utils', function () {
                         }
                     }
                 },
-                isStrikes: function (edge, route) {
-                    return typeof route.exchangesTotal != "undefined"
-                        && typeof edge.route != "undefined"
-                        && typeof edge.route.exchangesTotal != "undefined"
-                        && route.exchangesTotal != edge.route.exchangesTotal
+                getRouteRepresentation: function (route, service) {
+                    var color = service.color
+                    var dashes = false
+                    var weight = 1 //route.exchangesTotal,
+                    if (route.state == 'None') {
+                        color = "#b2b2b2"
+                        dashes = true
+                    } else if (route.state != 'Started') {
+                        color = "#ff251e"
+                        dashes = true
+                    }
+                    return {
+                        color: {color: color},
+                        dashes: dashes,
+                        weight: weight
+                    }
+                },
+                isNeedUpdate: function (edge, route) {
+                    if (typeof route.exchangesTotal == "undefined"
+                        || typeof edge.route == "undefined"
+                        || typeof edge.route.exchangesTotal == "undefined") {
+                        return false
+                    }
+                    return route.exchangesTotal != edge.route.exchangesTotal
+                        || route.state != edge.route.state
+                        || route.uptime != edge.route.uptime
                 },
                 build: function (data) {
                     this.nodesDataSet = new vis.DataSet([])

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 	"flag"
-	"git.fxclub.org/belyaev-ay/camel-graph/model"
+	"model"
 )
 
 var (

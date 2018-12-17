@@ -1,6 +1,6 @@
 ## Camel-graph
 Camel-graph is the viewer for camel routes through jolokia
-![main](https://user-images.githubusercontent.com/884337/50089386-49bc1d80-0238-11e9-86e1-e504b9dfa5ce.png)
+![camel-graph](https://user-images.githubusercontent.com/884337/50089472-812aca00-0238-11e9-8988-eb70b665ef81.png)
 ## Configuration - services.json
 ```json
 {

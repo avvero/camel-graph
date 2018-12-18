@@ -3,7 +3,7 @@
 
 Camel-graph is the viewer for servicemix and camel applications
 ## Requirenment 
-Viewer work over JMS with help of jolokia, so jolokia is required to be in your application.
+Viewer work over JMS with help of jolokia, so jolokia is required to be in your application or in servicemix.
 ## Example
 ![main-sm](https://user-images.githubusercontent.com/884337/50090052-137f9d80-023a-11e9-8bd3-24df76b7e32f.png)
 ## Configuration - services.json

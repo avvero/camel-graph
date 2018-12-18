@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 	"flag"
-	"model"
+	"github.com/avvero/camel-graph/model"
 )
 
 var (

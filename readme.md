@@ -1,7 +1,7 @@
 ## Camel-graph
 ![camel-graph](https://user-images.githubusercontent.com/884337/50089472-812aca00-0238-11e9-8988-eb70b665ef81.png)
 
-Camel-graph is the viewer for routes in servicemix and camel applications
+Camel-graph is the viewer for routes in servicemix and camel applications. [Article with intention and result explanation (Russian)](https://habr.com/ru/post/435594/)
 ## Requirenment 
 Viewer work over JMS with help of jolokia, so jolokia is required to be in your application or in servicemix.
 ## Example

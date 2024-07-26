@@ -1,7 +1,7 @@
 ### Overview
-Problem: managing hundreds of complex bus routes manually has become impractical\
-Solution: automatic route graph generation\
-Status: finished, article is published
+**Problem**: Managing hundreds of complex bus routes manually has become impractical\
+**Solution**: Automatic route graph generation\
+**Status**: Finished, article is published
 
 ----
 
